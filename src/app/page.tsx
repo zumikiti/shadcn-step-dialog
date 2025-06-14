@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { StepDialog } from "@/components/ui/step-dialog";
 
 export default function Home() {
   return (
@@ -21,6 +22,14 @@ export default function Home() {
         </div>
 
         <div className="space-y-4">
+          <StepDialog
+            trigger={
+              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                📝 ステップフォームダイアログ
+              </Button>
+            }
+          />
+
           <Dialog>
             <DialogTrigger asChild>
               <Button>基本的なダイアログを開く</Button>
