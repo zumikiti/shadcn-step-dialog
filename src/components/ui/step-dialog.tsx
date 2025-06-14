@@ -168,18 +168,21 @@ export function StepDialog({ trigger }: StepDialogProps) {
           {renderStepContent()}
         </div>
 
-        <DialogFooter className="flex justify-between">
+        <DialogFooter className="flex justify-between items-center">
+          {/* 左端：キャンセルボタン */}
           <div>
+            <Button variant="outline" onClick={handleClose} disabled={isLoading}>
+              キャンセル
+            </Button>
+          </div>
+          
+          {/* 右端：ナビゲーションボタン */}
+          <div className="flex space-x-2">
             {currentStep > 1 && (
               <Button variant="outline" onClick={prevStep} disabled={isLoading}>
                 前へ
               </Button>
             )}
-          </div>
-          <div className="flex space-x-2">
-            <Button variant="outline" onClick={handleClose} disabled={isLoading}>
-              キャンセル
-            </Button>
             {currentStep < 3 ? (
               <Button onClick={nextStep} disabled={isLoading}>
                 次へ
