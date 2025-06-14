@@ -34,6 +34,7 @@ Next.js + TypeScript + shadcn/ui + Zod を使用した高度な複数ステッ�
 - **Next.js 15.3.3** (App Router)
 - **TypeScript** (厳格モード)
 - **Zod 3.25.64** (スキーマバリデーション)
+- **Jest + React Testing Library** (ユニットテスト)
 - **shadcn/ui** (Dialog, Button, Input, Label, Checkbox)
 - **Tailwind CSS v4** (モダンスタイリング)
 - **Radix UI** (アクセシブルなプリミティブ)
@@ -78,7 +79,10 @@ src/
 │   ├── step-form-types.ts          # Zodスキーマと型定義
 │   └── utils.ts                    # ユーティリティ関数
 └── __tests__/
-    └── step-form.test.example.ts   # テストサンプルコード
+    ├── step-form-validation.test.ts # バリデーション関数のテスト
+    ├── personal-info.test.tsx      # PersonalInfoコンポーネントのテスト
+    ├── contact-info.test.tsx       # ContactInfoコンポーネントのテスト
+    └── confirmation.test.tsx       # Confirmationコンポーネントのテスト
 ```
 
 ## ステップダイアログの使用方法
@@ -158,29 +162,50 @@ npm start
 
 # コード品質チェック
 npm run lint
+
+# テスト実行
+npm test
+
+# テスト監視モード
+npm run test:watch
+
+# カバレッジ付きテスト
+npm run test:coverage
 ```
 
-## テストとバリデーション
+## テスト環境
 
-### Zodスキーマテスト
+### 🧪 Jest + React Testing Library
 
-プロジェクトには包括的なテストサンプルが含まれています（`src/__tests__/step-form.test.example.ts`）：
+プロジェクトには包括的なテストスイートが含まれています：
 
-- **スキーマレベルテスト**: formDataSchema、personalInfoSchema、contactInfoSchemaの直接テスト
+#### バリデーションテスト (`step-form-validation.test.ts`)
+- **Zodスキーマテスト**: formDataSchema、personalInfoSchema、contactInfoSchemaの直接テスト
 - **バリデーション関数テスト**: validatePersonalInfo、validateContactInfo、validateFormDataのテスト
-- **コンポーネントテスト例**: React Testing Libraryを使用したUIテストのサンプル
+- **電話番号バリデーション**: 携帯電話・固定電話の形式チェック
 
-### 実際のテスト環境セットアップ
+#### コンポーネントテスト
+- **PersonalInfo**: 氏名入力フィールドのレンダリング・入力・バリデーション
+- **ContactInfo**: 住所・電話・同意チェックボックスの動作
+- **Confirmation**: 確認画面のデータ表示とスタイリング
 
-テストフレームワークを追加する場合：
-
+#### テスト実行
 ```bash
-# Jest + React Testing Library
-npm install --save-dev jest @testing-library/react @testing-library/jest-dom
+# 全テスト実行
+npm test
 
-# Vitest + React Testing Library
-npm install --save-dev vitest @testing-library/react @testing-library/jest-dom
+# 監視モードでテスト実行
+npm run test:watch
+
+# カバレッジレポート生成
+npm run test:coverage
 ```
+
+#### テスト設定
+- **Jest設定**: Next.js統合設定 (`jest.config.js`)
+- **セットアップ**: Testing Library DOM拡張 (`jest.setup.js`)
+- **モジュールマッピング**: `@/` エイリアスサポート
+- **JSDOM環境**: ブラウザAPIシミュレーション
 
 ## Learn More
 

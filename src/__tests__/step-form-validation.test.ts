@@ -1,6 +1,3 @@
-// この例は実際のテストフレームワークを使用していません
-// 実際のプロジェクトでは Jest + React Testing Library などを使用してください
-
 import {
   FormData,
   validatePersonalInfo,
@@ -12,7 +9,6 @@ import {
   validatePhone,
 } from "@/lib/step-form-types";
 
-// Zodスキーマバリデーションのテスト例
 describe("Zod Schema Validation", () => {
   describe("formDataSchema", () => {
     it("should validate complete valid form data", () => {
@@ -97,8 +93,7 @@ describe("Zod Schema Validation", () => {
   });
 });
 
-// バリデーション関数のテスト例（Zodベース）
-describe("Zod-based Step Form Validation", () => {
+describe("Validation Functions", () => {
   describe("validatePersonalInfo", () => {
     it("should return no errors for valid input", () => {
       const formData: FormData = {
@@ -264,88 +259,3 @@ describe("Zod-based Step Form Validation", () => {
     });
   });
 });
-
-// コンポーネントテストの例（React Testing Libraryを使用）
-/*
-import { render, screen, fireEvent } from "@testing-library/react";
-import { PersonalInfo } from "@/components/step-form/personal-info";
-import { FormData, ValidationErrors } from "@/lib/step-form-types";
-
-describe("PersonalInfo", () => {
-  const mockFormData: FormData = {
-    firstName: "",
-    lastName: "",
-    address: "",
-    phone: "",
-    agreement: false,
-  };
-
-  const mockErrors: ValidationErrors = {};
-  const mockOnUpdateField = jest.fn();
-
-  beforeEach(() => {
-    mockOnUpdateField.mockClear();
-  });
-
-  it("should render input fields", () => {
-    render(
-      <PersonalInfo
-        formData={mockFormData}
-        errors={mockErrors}
-        onUpdateField={mockOnUpdateField}
-      />
-    );
-
-    expect(screen.getByTestId("firstName-input")).toBeInTheDocument();
-    expect(screen.getByTestId("lastName-input")).toBeInTheDocument();
-  });
-
-  it("should call onUpdateField when firstName changes", () => {
-    render(
-      <PersonalInfo
-        formData={mockFormData}
-        errors={mockErrors}
-        onUpdateField={mockOnUpdateField}
-      />
-    );
-
-    const firstNameInput = screen.getByTestId("firstName-input");
-    fireEvent.change(firstNameInput, { target: { value: "山田" } });
-
-    expect(mockOnUpdateField).toHaveBeenCalledWith("firstName", "山田");
-  });
-
-  it("should display error messages", () => {
-    const errorsWithMessage: ValidationErrors = {
-      firstName: "姓を入力してください",
-    };
-
-    render(
-      <PersonalInfo
-        formData={mockFormData}
-        errors={errorsWithMessage}
-        onUpdateField={mockOnUpdateField}
-      />
-    );
-
-    expect(screen.getByTestId("firstName-error")).toHaveTextContent("姓を入力してください");
-  });
-
-  it("should apply error styling to input with error", () => {
-    const errorsWithMessage: ValidationErrors = {
-      firstName: "姓を入力してください",
-    };
-
-    render(
-      <PersonalInfo
-        formData={mockFormData}
-        errors={errorsWithMessage}
-        onUpdateField={mockOnUpdateField}
-      />
-    );
-
-    const firstNameInput = screen.getByTestId("firstName-input");
-    expect(firstNameInput).toHaveClass("border-red-500");
-  });
-});
-*/
