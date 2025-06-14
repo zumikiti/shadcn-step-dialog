@@ -22,14 +22,14 @@ export const formDataSchema = z.object({
   }),
 });
 
-// ステップ1のスキーマ（姓名のみ）
-export const step1Schema = formDataSchema.pick({
+// 個人情報のスキーマ（姓名のみ）
+export const personalInfoSchema = formDataSchema.pick({
   firstName: true,
   lastName: true,
 });
 
-// ステップ2のスキーマ（住所、電話、同意）
-export const step2Schema = formDataSchema.pick({
+// 連絡先情報のスキーマ（住所、電話、同意）
+export const contactInfoSchema = formDataSchema.pick({
   address: true,
   phone: true,
   agreement: true,
@@ -37,8 +37,8 @@ export const step2Schema = formDataSchema.pick({
 
 // 型定義をスキーマから自動生成
 export type FormData = z.infer<typeof formDataSchema>;
-export type Step1Data = z.infer<typeof step1Schema>;
-export type Step2Data = z.infer<typeof step2Schema>;
+export type PersonalInfoData = z.infer<typeof personalInfoSchema>;
+export type ContactInfoData = z.infer<typeof contactInfoSchema>;
 
 // バリデーションエラー型
 export interface ValidationErrors {
@@ -73,9 +73,9 @@ const zodErrorToValidationErrors = (error: z.ZodError): ValidationErrors => {
   return errors;
 };
 
-// ステップ1のバリデーション
-export const validateStep1 = (formData: FormData): ValidationErrors => {
-  const result = step1Schema.safeParse(formData);
+// 個人情報のバリデーション
+export const validatePersonalInfo = (formData: FormData): ValidationErrors => {
+  const result = personalInfoSchema.safeParse(formData);
   
   if (!result.success) {
     return zodErrorToValidationErrors(result.error);
@@ -84,9 +84,9 @@ export const validateStep1 = (formData: FormData): ValidationErrors => {
   return {};
 };
 
-// ステップ2のバリデーション
-export const validateStep2 = (formData: FormData): ValidationErrors => {
-  const result = step2Schema.safeParse(formData);
+// 連絡先情報のバリデーション
+export const validateContactInfo = (formData: FormData): ValidationErrors => {
+  const result = contactInfoSchema.safeParse(formData);
   
   if (!result.success) {
     return zodErrorToValidationErrors(result.error);

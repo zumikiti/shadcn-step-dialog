@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { StepComponentProps } from "@/lib/step-form-types";
 import { cn } from "@/lib/utils";
 
-export function Step1PersonalInfo({ 
+export function PersonalInfo({ 
   formData, 
   errors, 
   onUpdateField, 

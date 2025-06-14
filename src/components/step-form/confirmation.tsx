@@ -1,7 +1,7 @@
 import { StepComponentProps } from "@/lib/step-form-types";
 import { cn } from "@/lib/utils";
 
-export function Step3Confirmation({ 
+export function Confirmation({ 
   formData, 
   className 
 }: StepComponentProps) {

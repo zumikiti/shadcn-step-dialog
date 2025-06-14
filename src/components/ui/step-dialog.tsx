@@ -10,14 +10,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Step1PersonalInfo } from "@/components/step-form/step1-personal-info";
-import { Step2ContactInfo } from "@/components/step-form/step2-contact-info";
-import { Step3Confirmation } from "@/components/step-form/step3-confirmation";
+import {
+  PersonalInfo,
+  ContactInfo,
+  Confirmation,
+} from "@/components/step-form";
 import {
   FormData,
   ValidationErrors,
-  validateStep1,
-  validateStep2,
+  validatePersonalInfo,
+  validateContactInfo,
   getStepTitle,
   getStepDescription,
 } from "@/lib/step-form-types";
@@ -51,9 +53,9 @@ export function StepDialog({ trigger }: StepDialogProps) {
     let newErrors: ValidationErrors = {};
     
     if (step === 1) {
-      newErrors = validateStep1(formData);
+      newErrors = validatePersonalInfo(formData);
     } else if (step === 2) {
-      newErrors = validateStep2(formData);
+      newErrors = validateContactInfo(formData);
     }
     
     setErrors(newErrors);
@@ -86,8 +88,8 @@ export function StepDialog({ trigger }: StepDialogProps) {
   };
 
   const handleClose = () => {
-    setOpen(false);
     resetForm();
+    setOpen(false);
   };
 
   const handleSubmit = async () => {
@@ -117,11 +119,11 @@ export function StepDialog({ trigger }: StepDialogProps) {
 
     switch (currentStep) {
       case 1:
-        return <Step1PersonalInfo {...stepProps} />;
+        return <PersonalInfo {...stepProps} />;
       case 2:
-        return <Step2ContactInfo {...stepProps} />;
+        return <ContactInfo {...stepProps} />;
       case 3:
-        return <Step3Confirmation {...stepProps} />;
+        return <Confirmation {...stepProps} />;
       default:
         return null;
     }
@@ -167,6 +169,7 @@ export function StepDialog({ trigger }: StepDialogProps) {
           {renderStepContent()}
         </div>
 
+        {/* DialogFooter だと右側にボタンが寄ってしまうので、カスタムフッターを使用 */}
         <div className="flex justify-between items-center pt-4 border-t">
           {/* 左端：キャンセルボタン */}
           <Button variant="outline" onClick={handleClose} disabled={isLoading}>
