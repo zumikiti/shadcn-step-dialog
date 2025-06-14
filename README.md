@@ -1,24 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# shadcn/ui Step Dialog
 
-## Getting Started
+Next.js + TypeScript + shadcn/ui を使用した複数ステップフォームダイアログのデモプロジェクトです。
 
-First, run the development server:
+## 機能
+
+### 🎯 ステップダイアログコンポーネント
+- **3ステップフォーム**: 氏名入力 → 詳細情報入力 → 確認画面
+- **プログレスインジケーター**: 現在のステップを視覚的に表示
+- **ステップナビゲーション**: 前へ・次へボタンによる直感的な操作
+
+### ✅ 高度なバリデーション機能
+- **リアルタイムバリデーション**: 入力時にエラーを即座にクリア
+- **詳細なエラーメッセージ**: 各フィールドに対応した具体的な指示
+- **電話番号フォーマットチェック**: 携帯電話・固定電話の形式をサポート
+- **必須フィールド表示**: アスタリスク（*）による視覚的な識別
+
+### 🎨 優れたユーザーエクスペリエンス
+- **ローディング状態**: 送信中の視覚的フィードバック
+- **非同期処理**: リアルな送信体験のシミュレーション
+- **エラーハンドリング**: 送信失敗時の適切な対応
+- **レスポンシブデザイン**: モバイル・デスクトップ対応
+
+### 🛠 技術スタック
+- **Next.js 15.3.3** (App Router)
+- **TypeScript** (厳格モード)
+- **shadcn/ui** (Dialog, Button, Input, Label, Checkbox)
+- **Tailwind CSS v4** (モダンスタイリング)
+- **Radix UI** (アクセシブルなプリミティブ)
+
+## クイックスタート
+
+開発サーバーを起動:
 
 ```bash
 npm run dev
-# or
+# または
 yarn dev
-# or
+# または
 pnpm dev
-# or
+# または
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[http://localhost:3000](http://localhost:3000) でアプリケーションを確認できます。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## プロジェクト構成
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── page.tsx          # メインページ（デモ画面）
+│   ├── layout.tsx        # ルートレイアウト
+│   └── globals.css       # グローバルスタイル
+├── components/ui/
+│   ├── step-dialog.tsx   # ステップダイアログコンポーネント
+│   ├── dialog.tsx        # shadcn/ui Dialog
+│   ├── button.tsx        # shadcn/ui Button
+│   ├── input.tsx         # shadcn/ui Input
+│   ├── label.tsx         # shadcn/ui Label
+│   └── checkbox.tsx      # shadcn/ui Checkbox
+└── lib/
+    └── utils.ts          # ユーティリティ関数
+```
+
+## ステップダイアログの使用方法
+
+```tsx
+import { StepDialog } from "@/components/ui/step-dialog";
+import { Button } from "@/components/ui/button";
+
+export default function MyPage() {
+  return (
+    <StepDialog
+      trigger={
+        <Button>フォームを開く</Button>
+      }
+    />
+  );
+}
+```
+
+## 開発コマンド
+
+```bash
+# 開発サーバー起動
+npm run dev
+
+# 本番ビルド
+npm run build
+
+# 本番サーバー起動
+npm start
+
+# コード品質チェック
+npm run lint
+```
 
 ## Learn More
 
