@@ -23,6 +23,14 @@ interface FormData {
   agreement: boolean;
 }
 
+interface ValidationErrors {
+  firstName?: string;
+  lastName?: string;
+  address?: string;
+  phone?: string;
+  agreement?: string;
+}
+
 interface StepDialogProps {
   trigger: React.ReactNode;
 }
@@ -30,6 +38,7 @@ interface StepDialogProps {
 export function StepDialog({ trigger }: StepDialogProps) {
   const [open, setOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -37,13 +46,53 @@ export function StepDialog({ trigger }: StepDialogProps) {
     phone: "",
     agreement: false,
   });
+  const [errors, setErrors] = useState<ValidationErrors>({});
 
   const updateFormData = (field: keyof FormData, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: undefined }));
+    }
+  };
+
+  const validatePhone = (phone: string): boolean => {
+    const phoneRegex = /^(070|080|090)-?\d{4}-?\d{4}$|^0\d{1,4}-?\d{1,4}-?\d{4}$/;
+    return phoneRegex.test(phone.replace(/-/g, ''));
+  };
+
+  const validateStep = (step: number): boolean => {
+    const newErrors: ValidationErrors = {};
+    
+    if (step === 1) {
+      if (!formData.firstName.trim()) {
+        newErrors.firstName = "姓を入力してください";
+      }
+      if (!formData.lastName.trim()) {
+        newErrors.lastName = "名を入力してください";
+      }
+    }
+    
+    if (step === 2) {
+      if (!formData.address.trim()) {
+        newErrors.address = "住所を入力してください";
+      }
+      if (!formData.phone.trim()) {
+        newErrors.phone = "電話番号を入力してください";
+      } else if (!validatePhone(formData.phone)) {
+        newErrors.phone = "正しい電話番号の形式で入力してください";
+      }
+      if (!formData.agreement) {
+        newErrors.agreement = "利用規約への同意が必要です";
+      }
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const nextStep = () => {
-    if (currentStep < 3) {
+    if (validateStep(currentStep) && currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -63,6 +112,8 @@ export function StepDialog({ trigger }: StepDialogProps) {
       phone: "",
       agreement: false,
     });
+    setErrors({});
+    setIsLoading(false);
   };
 
   const handleClose = () => {
@@ -70,14 +121,24 @@ export function StepDialog({ trigger }: StepDialogProps) {
     resetForm();
   };
 
-  const handleSubmit = () => {
-    console.log("フォーム送信:", formData);
-    alert("フォームが送信されました！");
-    handleClose();
+  const handleSubmit = async () => {
+    if (!validateStep(2)) return;
+    
+    setIsLoading(true);
+    try {
+      // シミュレートされた送信処理
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log("フォーム送信:", formData);
+      alert("フォームが送信されました！");
+      handleClose();
+    } catch (error) {
+      console.error("送信エラー:", error);
+      alert("送信に失敗しました。もう一度お試しください。");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const isStep1Valid = formData.firstName.trim() && formData.lastName.trim();
-  const isStep2Valid = formData.address.trim() && formData.phone.trim() && formData.agreement;
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -85,22 +146,30 @@ export function StepDialog({ trigger }: StepDialogProps) {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">姓</Label>
+              <Label htmlFor="firstName">姓 <span className="text-red-500">*</span></Label>
               <Input
                 id="firstName"
                 value={formData.firstName}
                 onChange={(e) => updateFormData("firstName", e.target.value)}
                 placeholder="山田"
+                className={errors.firstName ? "border-red-500" : ""}
               />
+              {errors.firstName && (
+                <p className="text-red-500 text-sm">{errors.firstName}</p>
+              )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">名</Label>
+              <Label htmlFor="lastName">名 <span className="text-red-500">*</span></Label>
               <Input
                 id="lastName"
                 value={formData.lastName}
                 onChange={(e) => updateFormData("lastName", e.target.value)}
                 placeholder="太郎"
+                className={errors.lastName ? "border-red-500" : ""}
               />
+              {errors.lastName && (
+                <p className="text-red-500 text-sm">{errors.lastName}</p>
+              )}
             </div>
           </div>
         );
@@ -108,30 +177,46 @@ export function StepDialog({ trigger }: StepDialogProps) {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="address">住所</Label>
+              <Label htmlFor="address">住所 <span className="text-red-500">*</span></Label>
               <Input
                 id="address"
                 value={formData.address}
                 onChange={(e) => updateFormData("address", e.target.value)}
                 placeholder="東京都渋谷区..."
+                className={errors.address ? "border-red-500" : ""}
               />
+              {errors.address && (
+                <p className="text-red-500 text-sm">{errors.address}</p>
+              )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">電話番号</Label>
+              <Label htmlFor="phone">電話番号 <span className="text-red-500">*</span></Label>
               <Input
                 id="phone"
                 value={formData.phone}
                 onChange={(e) => updateFormData("phone", e.target.value)}
                 placeholder="090-0000-0000"
+                className={errors.phone ? "border-red-500" : ""}
               />
+              {errors.phone && (
+                <p className="text-red-500 text-sm">{errors.phone}</p>
+              )}
+              <p className="text-xs text-muted-foreground">
+                携帯電話または固定電話の番号を入力してください
+              </p>
             </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="agreement"
-                checked={formData.agreement}
-                onCheckedChange={(checked) => updateFormData("agreement", !!checked)}
-              />
-              <Label htmlFor="agreement">利用規約に同意します</Label>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="agreement"
+                  checked={formData.agreement}
+                  onCheckedChange={(checked) => updateFormData("agreement", !!checked)}
+                />
+                <Label htmlFor="agreement">利用規約に同意します <span className="text-red-500">*</span></Label>
+              </div>
+              {errors.agreement && (
+                <p className="text-red-500 text-sm">{errors.agreement}</p>
+              )}
             </div>
           </div>
         );
@@ -231,28 +316,22 @@ export function StepDialog({ trigger }: StepDialogProps) {
         <DialogFooter className="flex justify-between">
           <div>
             {currentStep > 1 && (
-              <Button variant="outline" onClick={prevStep}>
+              <Button variant="outline" onClick={prevStep} disabled={isLoading}>
                 前へ
               </Button>
             )}
           </div>
           <div className="flex space-x-2">
-            <Button variant="outline" onClick={handleClose}>
+            <Button variant="outline" onClick={handleClose} disabled={isLoading}>
               キャンセル
             </Button>
             {currentStep < 3 ? (
-              <Button
-                onClick={nextStep}
-                disabled={
-                  (currentStep === 1 && !isStep1Valid) ||
-                  (currentStep === 2 && !isStep2Valid)
-                }
-              >
+              <Button onClick={nextStep} disabled={isLoading}>
                 次へ
               </Button>
             ) : (
-              <Button onClick={handleSubmit}>
-                送信
+              <Button onClick={handleSubmit} disabled={isLoading}>
+                {isLoading ? "送信中..." : "送信"}
               </Button>
             )}
           </div>
