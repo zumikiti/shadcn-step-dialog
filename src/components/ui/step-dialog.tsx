@@ -11,15 +11,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  Step1PersonalInfo,
-  Step2ContactInfo,
-  Step3Confirmation,
+  PersonalInfo,
+  ContactInfo,
+  Confirmation,
 } from "@/components/step-form";
 import {
   FormData,
   ValidationErrors,
-  validateStep1,
-  validateStep2,
+  validatePersonalInfo,
+  validateContactInfo,
   getStepTitle,
   getStepDescription,
 } from "@/lib/step-form-types";
@@ -53,9 +53,9 @@ export function StepDialog({ trigger }: StepDialogProps) {
     let newErrors: ValidationErrors = {};
     
     if (step === 1) {
-      newErrors = validateStep1(formData);
+      newErrors = validatePersonalInfo(formData);
     } else if (step === 2) {
-      newErrors = validateStep2(formData);
+      newErrors = validateContactInfo(formData);
     }
     
     setErrors(newErrors);
@@ -119,11 +119,11 @@ export function StepDialog({ trigger }: StepDialogProps) {
 
     switch (currentStep) {
       case 1:
-        return <Step1PersonalInfo {...stepProps} />;
+        return <PersonalInfo {...stepProps} />;
       case 2:
-        return <Step2ContactInfo {...stepProps} />;
+        return <ContactInfo {...stepProps} />;
       case 3:
-        return <Step3Confirmation {...stepProps} />;
+        return <Confirmation {...stepProps} />;
       default:
         return null;
     }

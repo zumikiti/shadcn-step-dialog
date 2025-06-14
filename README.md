@@ -18,7 +18,7 @@ Next.js + TypeScript + shadcn/ui + Zod を使用した高度な複数ステッ�
 - **リアルタイムバリデーション**: 入力時のエラークリア機能
 
 ### 🏗️ 保守性とテスト性
-- **コンポーネント分割**: Step1PersonalInfo、Step2ContactInfo、Step3Confirmation
+- **コンポーネント分割**: PersonalInfo、ContactInfo、Confirmation
 - **共通型定義**: step-form-types.tsによる一元管理
 - **テスト対応**: data-testid属性とテストサンプルコード
 - **包括的テスト例**: Zodスキーマとバリデーション関数のテストカバー
@@ -71,9 +71,9 @@ src/
 │   │   ├── label.tsx               # shadcn/ui Label
 │   │   └── checkbox.tsx            # shadcn/ui Checkbox
 │   └── step-form/
-│       ├── step1-personal-info.tsx # ステップ1: 氏名入力
-│       ├── step2-contact-info.tsx  # ステップ2: 住所・電話・同意
-│       └── step3-confirmation.tsx  # ステップ3: 確認画面
+│       ├── personal-info.tsx       # 個人情報: 氏名入力
+│       ├── contact-info.tsx        # 連絡先情報: 住所・電話・同意
+│       └── confirmation.tsx        # 確認画面
 ├── lib/
 │   ├── step-form-types.ts          # Zodスキーマと型定義
 │   └── utils.ts                    # ユーティリティ関数
@@ -114,6 +114,14 @@ export const formDataSchema = z.object({
   agreement: z.boolean().refine(val => val === true, {
     message: "利用規約への同意が必要です",
   }),
+});
+
+// コンポーネント別スキーマ
+export const personalInfoSchema = formDataSchema.pick({
+  firstName: true, lastName: true
+});
+export const contactInfoSchema = formDataSchema.pick({
+  address: true, phone: true, agreement: true
 });
 
 // 型安全な自動生成型
@@ -158,8 +166,8 @@ npm run lint
 
 プロジェクトには包括的なテストサンプルが含まれています（`src/__tests__/step-form.test.example.ts`）：
 
-- **スキーマレベルテスト**: formDataSchema、step1Schema、step2Schemaの直接テスト
-- **バリデーション関数テスト**: validateStep1、validateStep2、validateFormDataのテスト
+- **スキーマレベルテスト**: formDataSchema、personalInfoSchema、contactInfoSchemaの直接テスト
+- **バリデーション関数テスト**: validatePersonalInfo、validateContactInfo、validateFormDataのテスト
 - **コンポーネントテスト例**: React Testing Libraryを使用したUIテストのサンプル
 
 ### 実際のテスト環境セットアップ

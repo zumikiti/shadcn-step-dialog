@@ -3,12 +3,12 @@
 
 import {
   FormData,
-  validateStep1,
-  validateStep2,
+  validatePersonalInfo,
+  validateContactInfo,
   validateFormData,
   formDataSchema,
-  step1Schema,
-  step2Schema,
+  personalInfoSchema,
+  contactInfoSchema,
   validatePhone,
 } from "@/lib/step-form-types";
 
@@ -50,48 +50,48 @@ describe("Zod Schema Validation", () => {
     });
   });
 
-  describe("step1Schema", () => {
-    it("should validate step1 data", () => {
-      const validStep1: { firstName: string; lastName: string } = {
+  describe("personalInfoSchema", () => {
+    it("should validate personal info data", () => {
+      const validPersonalInfo: { firstName: string; lastName: string } = {
         firstName: "山田",
         lastName: "太郎",
       };
 
-      const result = step1Schema.safeParse(validStep1);
+      const result = personalInfoSchema.safeParse(validPersonalInfo);
       expect(result.success).toBe(true);
     });
 
-    it("should reject invalid step1 data", () => {
-      const invalidStep1 = {
+    it("should reject invalid personal info data", () => {
+      const invalidPersonalInfo = {
         firstName: "",
         lastName: "",
       };
 
-      const result = step1Schema.safeParse(invalidStep1);
+      const result = personalInfoSchema.safeParse(invalidPersonalInfo);
       expect(result.success).toBe(false);
     });
   });
 
-  describe("step2Schema", () => {
-    it("should validate step2 data", () => {
-      const validStep2 = {
+  describe("contactInfoSchema", () => {
+    it("should validate contact info data", () => {
+      const validContactInfo = {
         address: "東京都渋谷区1-1-1",
         phone: "090-1234-5678",
         agreement: true,
       };
 
-      const result = step2Schema.safeParse(validStep2);
+      const result = contactInfoSchema.safeParse(validContactInfo);
       expect(result.success).toBe(true);
     });
 
-    it("should reject invalid step2 data", () => {
-      const invalidStep2 = {
+    it("should reject invalid contact info data", () => {
+      const invalidContactInfo = {
         address: "",
         phone: "123",
         agreement: false,
       };
 
-      const result = step2Schema.safeParse(invalidStep2);
+      const result = contactInfoSchema.safeParse(invalidContactInfo);
       expect(result.success).toBe(false);
     });
   });
@@ -99,7 +99,7 @@ describe("Zod Schema Validation", () => {
 
 // バリデーション関数のテスト例（Zodベース）
 describe("Zod-based Step Form Validation", () => {
-  describe("validateStep1", () => {
+  describe("validatePersonalInfo", () => {
     it("should return no errors for valid input", () => {
       const formData: FormData = {
         firstName: "山田",
@@ -109,7 +109,7 @@ describe("Zod-based Step Form Validation", () => {
         agreement: false,
       };
 
-      const errors = validateStep1(formData);
+      const errors = validatePersonalInfo(formData);
       expect(Object.keys(errors)).toHaveLength(0);
     });
 
@@ -122,7 +122,7 @@ describe("Zod-based Step Form Validation", () => {
         agreement: false,
       };
 
-      const errors = validateStep1(formData);
+      const errors = validatePersonalInfo(formData);
       expect(errors.firstName).toBe("姓を入力してください");
     });
 
@@ -135,7 +135,7 @@ describe("Zod-based Step Form Validation", () => {
         agreement: false,
       };
 
-      const errors = validateStep1(formData);
+      const errors = validatePersonalInfo(formData);
       expect(errors.lastName).toBe("名を入力してください");
     });
 
@@ -148,13 +148,13 @@ describe("Zod-based Step Form Validation", () => {
         agreement: true,
       };
 
-      const errors = validateStep1(formData);
+      const errors = validatePersonalInfo(formData);
       expect(errors.firstName).toBe("姓を入力してください");
       expect(errors.lastName).toBe("名を入力してください");
     });
   });
 
-  describe("validateStep2", () => {
+  describe("validateContactInfo", () => {
     it("should return no errors for valid input", () => {
       const formData: FormData = {
         firstName: "山田",
@@ -164,7 +164,7 @@ describe("Zod-based Step Form Validation", () => {
         agreement: true,
       };
 
-      const errors = validateStep2(formData);
+      const errors = validateContactInfo(formData);
       expect(Object.keys(errors)).toHaveLength(0);
     });
 
@@ -177,7 +177,7 @@ describe("Zod-based Step Form Validation", () => {
         agreement: true,
       };
 
-      const errors = validateStep2(formData);
+      const errors = validateContactInfo(formData);
       expect(errors.phone).toBe("正しい電話番号の形式で入力してください（例: 090-1234-5678）");
     });
 
@@ -190,7 +190,7 @@ describe("Zod-based Step Form Validation", () => {
         agreement: false,
       };
 
-      const errors = validateStep2(formData);
+      const errors = validateContactInfo(formData);
       expect(errors.agreement).toBe("利用規約への同意が必要です");
     });
 
@@ -203,7 +203,7 @@ describe("Zod-based Step Form Validation", () => {
         agreement: false,
       };
 
-      const errors = validateStep2(formData);
+      const errors = validateContactInfo(formData);
       expect(errors.address).toBe("住所を入力してください");
       expect(errors.phone).toBe("正しい電話番号の形式で入力してください（例: 090-1234-5678）");
       expect(errors.agreement).toBe("利用規約への同意が必要です");
@@ -268,10 +268,10 @@ describe("Zod-based Step Form Validation", () => {
 // コンポーネントテストの例（React Testing Libraryを使用）
 /*
 import { render, screen, fireEvent } from "@testing-library/react";
-import { Step1PersonalInfo } from "@/components/step-form/step1-personal-info";
+import { PersonalInfo } from "@/components/step-form/personal-info";
 import { FormData, ValidationErrors } from "@/lib/step-form-types";
 
-describe("Step1PersonalInfo", () => {
+describe("PersonalInfo", () => {
   const mockFormData: FormData = {
     firstName: "",
     lastName: "",
@@ -289,7 +289,7 @@ describe("Step1PersonalInfo", () => {
 
   it("should render input fields", () => {
     render(
-      <Step1PersonalInfo
+      <PersonalInfo
         formData={mockFormData}
         errors={mockErrors}
         onUpdateField={mockOnUpdateField}
@@ -302,7 +302,7 @@ describe("Step1PersonalInfo", () => {
 
   it("should call onUpdateField when firstName changes", () => {
     render(
-      <Step1PersonalInfo
+      <PersonalInfo
         formData={mockFormData}
         errors={mockErrors}
         onUpdateField={mockOnUpdateField}
@@ -321,7 +321,7 @@ describe("Step1PersonalInfo", () => {
     };
 
     render(
-      <Step1PersonalInfo
+      <PersonalInfo
         formData={mockFormData}
         errors={errorsWithMessage}
         onUpdateField={mockOnUpdateField}
@@ -337,7 +337,7 @@ describe("Step1PersonalInfo", () => {
     };
 
     render(
-      <Step1PersonalInfo
+      <PersonalInfo
         formData={mockFormData}
         errors={errorsWithMessage}
         onUpdateField={mockOnUpdateField}

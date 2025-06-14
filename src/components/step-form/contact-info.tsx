@@ -4,7 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { StepComponentProps } from "@/lib/step-form-types";
 import { cn } from "@/lib/utils";
 
-export function Step2ContactInfo({ 
+export function ContactInfo({ 
   formData, 
   errors, 
   onUpdateField, 
