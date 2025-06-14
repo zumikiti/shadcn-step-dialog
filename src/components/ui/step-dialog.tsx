@@ -10,9 +10,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Step1PersonalInfo } from "@/components/step-form/step1-personal-info";
-import { Step2ContactInfo } from "@/components/step-form/step2-contact-info";
-import { Step3Confirmation } from "@/components/step-form/step3-confirmation";
+import {
+  Step1PersonalInfo,
+  Step2ContactInfo,
+  Step3Confirmation,
+} from "@/components/step-form";
 import {
   FormData,
   ValidationErrors,
@@ -86,8 +88,8 @@ export function StepDialog({ trigger }: StepDialogProps) {
   };
 
   const handleClose = () => {
-    setOpen(false);
     resetForm();
+    setOpen(false);
   };
 
   const handleSubmit = async () => {
@@ -167,6 +169,7 @@ export function StepDialog({ trigger }: StepDialogProps) {
           {renderStepContent()}
         </div>
 
+        {/* DialogFooter だと右側にボタンが寄ってしまうので、カスタムフッターを使用 */}
         <div className="flex justify-between items-center pt-4 border-t">
           {/* 左端：キャンセルボタン */}
           <Button variant="outline" onClick={handleClose} disabled={isLoading}>
