@@ -5,11 +5,100 @@ import {
   FormData,
   validateStep1,
   validateStep2,
+  validateFormData,
+  formDataSchema,
+  step1Schema,
+  step2Schema,
   validatePhone,
 } from "@/lib/step-form-types";
 
-// バリデーション関数のテスト例
-describe("Step Form Validation", () => {
+// Zodスキーマバリデーションのテスト例
+describe("Zod Schema Validation", () => {
+  describe("formDataSchema", () => {
+    it("should validate complete valid form data", () => {
+      const validData: FormData = {
+        firstName: "山田",
+        lastName: "太郎",
+        address: "東京都渋谷区1-1-1",
+        phone: "090-1234-5678",
+        agreement: true,
+      };
+
+      const result = formDataSchema.safeParse(validData);
+      expect(result.success).toBe(true);
+    });
+
+    it("should reject invalid form data", () => {
+      const invalidData = {
+        firstName: "",
+        lastName: "太郎",
+        address: "",
+        phone: "invalid-phone",
+        agreement: false,
+      };
+
+      const result = formDataSchema.safeParse(invalidData);
+      expect(result.success).toBe(false);
+      
+      if (!result.success) {
+        const errors = result.error.errors;
+        expect(errors.some(err => err.path[0] === "firstName")).toBe(true);
+        expect(errors.some(err => err.path[0] === "address")).toBe(true);
+        expect(errors.some(err => err.path[0] === "phone")).toBe(true);
+        expect(errors.some(err => err.path[0] === "agreement")).toBe(true);
+      }
+    });
+  });
+
+  describe("step1Schema", () => {
+    it("should validate step1 data", () => {
+      const validStep1: { firstName: string; lastName: string } = {
+        firstName: "山田",
+        lastName: "太郎",
+      };
+
+      const result = step1Schema.safeParse(validStep1);
+      expect(result.success).toBe(true);
+    });
+
+    it("should reject invalid step1 data", () => {
+      const invalidStep1 = {
+        firstName: "",
+        lastName: "",
+      };
+
+      const result = step1Schema.safeParse(invalidStep1);
+      expect(result.success).toBe(false);
+    });
+  });
+
+  describe("step2Schema", () => {
+    it("should validate step2 data", () => {
+      const validStep2 = {
+        address: "東京都渋谷区1-1-1",
+        phone: "090-1234-5678",
+        agreement: true,
+      };
+
+      const result = step2Schema.safeParse(validStep2);
+      expect(result.success).toBe(true);
+    });
+
+    it("should reject invalid step2 data", () => {
+      const invalidStep2 = {
+        address: "",
+        phone: "123",
+        agreement: false,
+      };
+
+      const result = step2Schema.safeParse(invalidStep2);
+      expect(result.success).toBe(false);
+    });
+  });
+});
+
+// バリデーション関数のテスト例（Zodベース）
+describe("Zod-based Step Form Validation", () => {
   describe("validateStep1", () => {
     it("should return no errors for valid input", () => {
       const formData: FormData = {
@@ -49,6 +138,20 @@ describe("Step Form Validation", () => {
       const errors = validateStep1(formData);
       expect(errors.lastName).toBe("名を入力してください");
     });
+
+    it("should return errors for both empty fields", () => {
+      const formData: FormData = {
+        firstName: "",
+        lastName: "",
+        address: "東京都渋谷区1-1-1",
+        phone: "090-1234-5678",
+        agreement: true,
+      };
+
+      const errors = validateStep1(formData);
+      expect(errors.firstName).toBe("姓を入力してください");
+      expect(errors.lastName).toBe("名を入力してください");
+    });
   });
 
   describe("validateStep2", () => {
@@ -75,7 +178,7 @@ describe("Step Form Validation", () => {
       };
 
       const errors = validateStep2(formData);
-      expect(errors.phone).toBe("正しい電話番号の形式で入力してください");
+      expect(errors.phone).toBe("正しい電話番号の形式で入力してください（例: 090-1234-5678）");
     });
 
     it("should return error for missing agreement", () => {
@@ -90,9 +193,56 @@ describe("Step Form Validation", () => {
       const errors = validateStep2(formData);
       expect(errors.agreement).toBe("利用規約への同意が必要です");
     });
+
+    it("should return multiple errors for invalid input", () => {
+      const formData: FormData = {
+        firstName: "山田",
+        lastName: "太郎",
+        address: "",
+        phone: "invalid",
+        agreement: false,
+      };
+
+      const errors = validateStep2(formData);
+      expect(errors.address).toBe("住所を入力してください");
+      expect(errors.phone).toBe("正しい電話番号の形式で入力してください（例: 090-1234-5678）");
+      expect(errors.agreement).toBe("利用規約への同意が必要です");
+    });
   });
 
-  describe("validatePhone", () => {
+  describe("validateFormData", () => {
+    it("should validate complete form data", () => {
+      const formData: FormData = {
+        firstName: "山田",
+        lastName: "太郎",
+        address: "東京都渋谷区1-1-1",
+        phone: "090-1234-5678",
+        agreement: true,
+      };
+
+      const errors = validateFormData(formData);
+      expect(Object.keys(errors)).toHaveLength(0);
+    });
+
+    it("should return all field errors for invalid form data", () => {
+      const formData: FormData = {
+        firstName: "",
+        lastName: "",
+        address: "",
+        phone: "invalid",
+        agreement: false,
+      };
+
+      const errors = validateFormData(formData);
+      expect(errors.firstName).toBe("姓を入力してください");
+      expect(errors.lastName).toBe("名を入力してください");
+      expect(errors.address).toBe("住所を入力してください");
+      expect(errors.phone).toBe("正しい電話番号の形式で入力してください（例: 090-1234-5678）");
+      expect(errors.agreement).toBe("利用規約への同意が必要です");
+    });
+  });
+
+  describe("validatePhone (backward compatibility)", () => {
     it("should validate mobile phone numbers", () => {
       expect(validatePhone("090-1234-5678")).toBe(true);
       expect(validatePhone("080-1234-5678")).toBe(true);
