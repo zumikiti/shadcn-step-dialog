@@ -12,7 +12,7 @@ Next.js + TypeScript + shadcn/ui + Zod を使用した高度な複数ステッ�
 
 ### ✅ Zodによるスキーマベースバリデーション
 - **型安全バリデーション**: ランタイムとコンパイルタイムの型整合性
-- **宣言的スキーマ**: formDataSchema、step1Schema、step2Schemaによる構造化
+- **宣言的スキーマ**: formDataSchema、personalInfoSchema、contactInfoSchemaによる構造化
 - **カスタムバリデーション**: 電話番号フォーマットの詳細チェック
 - **日本語エラーメッセージ**: ユーザーフレンドリーなエラー表示
 - **リアルタイムバリデーション**: 入力時のエラークリア機能
@@ -22,6 +22,13 @@ Next.js + TypeScript + shadcn/ui + Zod を使用した高度な複数ステッ�
 - **共通型定義**: step-form-types.tsによる一元管理
 - **テスト対応**: data-testid属性とテストサンプルコード
 - **包括的テスト例**: Zodスキーマとバリデーション関数のテストカバー
+
+### 🚀 CI/CD & コード品質
+- **GitHub Actions**: 自動テスト・ビルド・品質チェック
+- **マルチNode.js対応**: Node.js 18.x/20.x での検証
+- **4段階品質チェック**: ESLint → Biome → TypeScript → Jest
+- **Codecov統合**: カバレッジレポートの自動生成・追跡
+- **自動フォーマット**: BiomeとESLintによるコード統一
 
 ### 🎨 優れたユーザーエクスペリエンス
 - **ローディング状態**: 送信中の視覚的フィードバック
@@ -35,6 +42,8 @@ Next.js + TypeScript + shadcn/ui + Zod を使用した高度な複数ステッ�
 - **TypeScript** (厳格モード)
 - **Zod 3.25.64** (スキーマバリデーション)
 - **Jest + React Testing Library** (ユニットテスト)
+- **Biome 1.9.4** (高速フォーマッター・リンター)
+- **GitHub Actions** (CI/CD自動化)
 - **shadcn/ui** (Dialog, Button, Input, Label, Checkbox)
 - **Tailwind CSS v4** (モダンスタイリング)
 - **Radix UI** (アクセシブルなプリミティブ)
@@ -122,10 +131,13 @@ export const formDataSchema = z.object({
 
 // コンポーネント別スキーマ
 export const personalInfoSchema = formDataSchema.pick({
-  firstName: true, lastName: true
+  firstName: true,
+  lastName: true,
 });
 export const contactInfoSchema = formDataSchema.pick({
-  address: true, phone: true, agreement: true
+  address: true,
+  phone: true,
+  agreement: true,
 });
 
 // 型安全な自動生成型
@@ -161,16 +173,19 @@ npm run build
 npm start
 
 # コード品質チェック
-npm run lint
+npm run lint           # ESLint実行
+npm run lint:biome     # Biomeリンター実行
+npm run check          # Biome包括チェック
+npm run check:fix      # Biome自動修正
+
+# コードフォーマット
+npm run format         # 自動フォーマット
+npm run format:check   # フォーマットチェック
 
 # テスト実行
-npm test
-
-# テスト監視モード
-npm run test:watch
-
-# カバレッジ付きテスト
-npm run test:coverage
+npm test               # 全テスト実行
+npm run test:watch     # テスト監視モード
+npm run test:coverage  # カバレッジ付きテスト
 ```
 
 ## テスト環境
