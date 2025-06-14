@@ -1,14 +1,14 @@
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { StepComponentProps } from "@/lib/step-form-types";
+import type { StepComponentProps } from "@/lib/step-form-types";
 import { cn } from "@/lib/utils";
 
-export function ContactInfo({ 
-  formData, 
-  errors, 
-  onUpdateField, 
-  className 
+export function ContactInfo({
+  formData,
+  errors,
+  onUpdateField,
+  className,
 }: StepComponentProps) {
   return (
     <div className={cn("space-y-4", className)}>
@@ -30,7 +30,7 @@ export function ContactInfo({
           </p>
         )}
       </div>
-      
+
       <div className="space-y-2">
         <Label htmlFor="phone">
           電話番号 <span className="text-red-500">*</span>
@@ -52,7 +52,7 @@ export function ContactInfo({
           携帯電話または固定電話の番号を入力してください
         </p>
       </div>
-      
+
       <div className="space-y-2">
         <div className="flex items-center space-x-2">
           <Checkbox
