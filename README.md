@@ -1,29 +1,39 @@
 # shadcn/ui Step Dialog
 
-Next.js + TypeScript + shadcn/ui を使用した複数ステップフォームダイアログのデモプロジェクトです。
+Next.js + TypeScript + shadcn/ui + Zod を使用した高度な複数ステップフォームダイアログのデモプロジェクトです。
 
 ## 機能
 
 ### 🎯 ステップダイアログコンポーネント
 - **3ステップフォーム**: 氏名入力 → 詳細情報入力 → 確認画面
 - **プログレスインジケーター**: 現在のステップを視覚的に表示
-- **ステップナビゲーション**: 前へ・次へボタンによる直感的な操作
+- **直感的なナビゲーション**: 最適化されたボタン配置（左端：キャンセル、右端：前へ・次へ）
+- **モジュラー設計**: 各ステップが独立したコンポーネント
 
-### ✅ 高度なバリデーション機能
-- **リアルタイムバリデーション**: 入力時にエラーを即座にクリア
-- **詳細なエラーメッセージ**: 各フィールドに対応した具体的な指示
-- **電話番号フォーマットチェック**: 携帯電話・固定電話の形式をサポート
-- **必須フィールド表示**: アスタリスク（*）による視覚的な識別
+### ✅ Zodによるスキーマベースバリデーション
+- **型安全バリデーション**: ランタイムとコンパイルタイムの型整合性
+- **宣言的スキーマ**: formDataSchema、step1Schema、step2Schemaによる構造化
+- **カスタムバリデーション**: 電話番号フォーマットの詳細チェック
+- **日本語エラーメッセージ**: ユーザーフレンドリーなエラー表示
+- **リアルタイムバリデーション**: 入力時のエラークリア機能
+
+### 🏗️ 保守性とテスト性
+- **コンポーネント分割**: Step1PersonalInfo、Step2ContactInfo、Step3Confirmation
+- **共通型定義**: step-form-types.tsによる一元管理
+- **テスト対応**: data-testid属性とテストサンプルコード
+- **包括的テスト例**: Zodスキーマとバリデーション関数のテストカバー
 
 ### 🎨 優れたユーザーエクスペリエンス
 - **ローディング状態**: 送信中の視覚的フィードバック
 - **非同期処理**: リアルな送信体験のシミュレーション
 - **エラーハンドリング**: 送信失敗時の適切な対応
+- **アクセシブルUI**: ボタン無効化とARIA属性
 - **レスポンシブデザイン**: モバイル・デスクトップ対応
 
 ### 🛠 技術スタック
 - **Next.js 15.3.3** (App Router)
 - **TypeScript** (厳格モード)
+- **Zod 3.25.64** (スキーマバリデーション)
 - **shadcn/ui** (Dialog, Button, Input, Label, Checkbox)
 - **Tailwind CSS v4** (モダンスタイリング)
 - **Radix UI** (アクセシブルなプリミティブ)
@@ -49,21 +59,31 @@ bun dev
 ```
 src/
 ├── app/
-│   ├── page.tsx          # メインページ（デモ画面）
-│   ├── layout.tsx        # ルートレイアウト
-│   └── globals.css       # グローバルスタイル
-├── components/ui/
-│   ├── step-dialog.tsx   # ステップダイアログコンポーネント
-│   ├── dialog.tsx        # shadcn/ui Dialog
-│   ├── button.tsx        # shadcn/ui Button
-│   ├── input.tsx         # shadcn/ui Input
-│   ├── label.tsx         # shadcn/ui Label
-│   └── checkbox.tsx      # shadcn/ui Checkbox
-└── lib/
-    └── utils.ts          # ユーティリティ関数
+│   ├── page.tsx                    # メインページ（デモ画面）
+│   ├── layout.tsx                  # ルートレイアウト
+│   └── globals.css                 # グローバルスタイル
+├── components/
+│   ├── ui/
+│   │   ├── step-dialog.tsx         # メインダイアログコンポーネント
+│   │   ├── dialog.tsx              # shadcn/ui Dialog
+│   │   ├── button.tsx              # shadcn/ui Button
+│   │   ├── input.tsx               # shadcn/ui Input
+│   │   ├── label.tsx               # shadcn/ui Label
+│   │   └── checkbox.tsx            # shadcn/ui Checkbox
+│   └── step-form/
+│       ├── step1-personal-info.tsx # ステップ1: 氏名入力
+│       ├── step2-contact-info.tsx  # ステップ2: 住所・電話・同意
+│       └── step3-confirmation.tsx  # ステップ3: 確認画面
+├── lib/
+│   ├── step-form-types.ts          # Zodスキーマと型定義
+│   └── utils.ts                    # ユーティリティ関数
+└── __tests__/
+    └── step-form.test.example.ts   # テストサンプルコード
 ```
 
 ## ステップダイアログの使用方法
+
+### 基本的な使用方法
 
 ```tsx
 import { StepDialog } from "@/components/ui/step-dialog";
@@ -76,6 +96,42 @@ export default function MyPage() {
         <Button>フォームを開く</Button>
       }
     />
+  );
+}
+```
+
+### Zodスキーマベースバリデーション
+
+フォームバリデーションはZodスキーマで定義されています：
+
+```typescript
+// /src/lib/step-form-types.ts より抜粋
+export const formDataSchema = z.object({
+  firstName: z.string().min(1, "姓を入力してください"),
+  lastName: z.string().min(1, "名を入力してください"),
+  address: z.string().min(1, "住所を入力してください"),
+  phone: phoneSchema, // カスタム電話番号バリデーション
+  agreement: z.boolean().refine(val => val === true, {
+    message: "利用規約への同意が必要です",
+  }),
+});
+
+// 型安全な自動生成型
+export type FormData = z.infer<typeof formDataSchema>;
+```
+
+### カスタムステップコンポーネントの追加
+
+新しいステップコンポーネントを作成する場合：
+
+```tsx
+import { StepComponentProps } from "@/lib/step-form-types";
+
+export function MyCustomStep({ formData, errors, onUpdateField }: StepComponentProps) {
+  return (
+    <div className="space-y-4">
+      {/* カスタムフィールド */}
+    </div>
   );
 }
 ```
@@ -94,6 +150,28 @@ npm start
 
 # コード品質チェック
 npm run lint
+```
+
+## テストとバリデーション
+
+### Zodスキーマテスト
+
+プロジェクトには包括的なテストサンプルが含まれています（`src/__tests__/step-form.test.example.ts`）：
+
+- **スキーマレベルテスト**: formDataSchema、step1Schema、step2Schemaの直接テスト
+- **バリデーション関数テスト**: validateStep1、validateStep2、validateFormDataのテスト
+- **コンポーネントテスト例**: React Testing Libraryを使用したUIテストのサンプル
+
+### 実際のテスト環境セットアップ
+
+テストフレームワークを追加する場合：
+
+```bash
+# Jest + React Testing Library
+npm install --save-dev jest @testing-library/react @testing-library/jest-dom
+
+# Vitest + React Testing Library
+npm install --save-dev vitest @testing-library/react @testing-library/jest-dom
 ```
 
 ## Learn More
