@@ -3,8 +3,9 @@ import { z } from "zod";
 // 電話番号バリデーション用のカスタムスキーマ
 const phoneSchema = z.string().refine(
   (value) => {
-    const phoneRegex = /^(070|080|090)-?\d{4}-?\d{4}$|^0\d{1,4}-?\d{1,4}-?\d{4}$/;
-    return phoneRegex.test(value.replace(/-/g, ''));
+    const phoneRegex =
+      /^(070|080|090)-?\d{4}-?\d{4}$|^0\d{1,4}-?\d{1,4}-?\d{4}$/;
+    return phoneRegex.test(value.replace(/-/g, ""));
   },
   {
     message: "正しい電話番号の形式で入力してください（例: 090-1234-5678）",
@@ -17,7 +18,7 @@ export const formDataSchema = z.object({
   lastName: z.string().min(1, "名を入力してください"),
   address: z.string().min(1, "住所を入力してください"),
   phone: phoneSchema,
-  agreement: z.boolean().refine(val => val === true, {
+  agreement: z.boolean().refine((val) => val === true, {
     message: "利用規約への同意が必要です",
   }),
 });
@@ -62,54 +63,54 @@ export interface StepComponentProps extends StepProps {
 // zodエラーをValidationErrorsに変換するヘルパー関数
 const zodErrorToValidationErrors = (error: z.ZodError): ValidationErrors => {
   const errors: ValidationErrors = {};
-  
-  error.errors.forEach((err) => {
+
+  for (const err of error.errors) {
     const field = err.path[0] as keyof ValidationErrors;
     if (field) {
       errors[field] = err.message;
     }
-  });
-  
+  }
+
   return errors;
 };
 
 // 個人情報のバリデーション
 export const validatePersonalInfo = (formData: FormData): ValidationErrors => {
   const result = personalInfoSchema.safeParse(formData);
-  
+
   if (!result.success) {
     return zodErrorToValidationErrors(result.error);
   }
-  
+
   return {};
 };
 
 // 連絡先情報のバリデーション
 export const validateContactInfo = (formData: FormData): ValidationErrors => {
   const result = contactInfoSchema.safeParse(formData);
-  
+
   if (!result.success) {
     return zodErrorToValidationErrors(result.error);
   }
-  
+
   return {};
 };
 
 // フォーム全体のバリデーション
 export const validateFormData = (formData: FormData): ValidationErrors => {
   const result = formDataSchema.safeParse(formData);
-  
+
   if (!result.success) {
     return zodErrorToValidationErrors(result.error);
   }
-  
+
   return {};
 };
 
 // 後方互換性のための関数（廃止予定）
 export const validatePhone = (phone: string): boolean => {
   const phoneRegex = /^(070|080|090)-?\d{4}-?\d{4}$|^0\d{1,4}-?\d{1,4}-?\d{4}$/;
-  return phoneRegex.test(phone.replace(/-/g, ''));
+  return phoneRegex.test(phone.replace(/-/g, ""));
 };
 
 export const getStepTitle = (step: number): string => {

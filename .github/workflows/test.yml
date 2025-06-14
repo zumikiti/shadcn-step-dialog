@@ -30,6 +30,9 @@ jobs:
     - name: Run ESLint
       run: npm run lint
 
+    - name: Run Biome check
+      run: npm run check
+
     - name: Run TypeScript check
       run: npx tsc --noEmit
 

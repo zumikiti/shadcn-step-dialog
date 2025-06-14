@@ -1,13 +1,13 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { StepComponentProps } from "@/lib/step-form-types";
+import type { StepComponentProps } from "@/lib/step-form-types";
 import { cn } from "@/lib/utils";
 
-export function PersonalInfo({ 
-  formData, 
-  errors, 
-  onUpdateField, 
-  className 
+export function PersonalInfo({
+  formData,
+  errors,
+  onUpdateField,
+  className,
 }: StepComponentProps) {
   return (
     <div className={cn("space-y-4", className)}>
@@ -29,7 +29,7 @@ export function PersonalInfo({
           </p>
         )}
       </div>
-      
+
       <div className="space-y-2">
         <Label htmlFor="lastName">
           名 <span className="text-red-500">*</span>

@@ -1,6 +1,6 @@
-import { render, screen, fireEvent } from "@testing-library/react";
 import { ContactInfo } from "@/components/step-form/contact-info";
-import { FormData, ValidationErrors } from "@/lib/step-form-types";
+import type { FormData, ValidationErrors } from "@/lib/step-form-types";
+import { fireEvent, render, screen } from "@testing-library/react";
 
 describe("ContactInfo", () => {
   const mockFormData: FormData = {
@@ -62,7 +62,9 @@ describe("ContactInfo", () => {
       />
     );
 
-    const addressInput = screen.getByTestId("address-input") as HTMLInputElement;
+    const addressInput = screen.getByTestId(
+      "address-input"
+    ) as HTMLInputElement;
     const phoneInput = screen.getByTestId("phone-input") as HTMLInputElement;
     const agreementCheckbox = screen.getByTestId("agreement-checkbox");
 
@@ -144,9 +146,15 @@ describe("ContactInfo", () => {
       />
     );
 
-    expect(screen.getByTestId("address-error")).toHaveTextContent("住所を入力してください");
-    expect(screen.getByTestId("phone-error")).toHaveTextContent("正しい電話番号の形式で入力してください（例: 090-1234-5678）");
-    expect(screen.getByTestId("agreement-error")).toHaveTextContent("利用規約への同意が必要です");
+    expect(screen.getByTestId("address-error")).toHaveTextContent(
+      "住所を入力してください"
+    );
+    expect(screen.getByTestId("phone-error")).toHaveTextContent(
+      "正しい電話番号の形式で入力してください（例: 090-1234-5678）"
+    );
+    expect(screen.getByTestId("agreement-error")).toHaveTextContent(
+      "利用規約への同意が必要です"
+    );
   });
 
   it("should apply error styling to inputs with errors", () => {
@@ -179,7 +187,9 @@ describe("ContactInfo", () => {
       />
     );
 
-    expect(screen.getByText("携帯電話または固定電話の番号を入力してください")).toBeInTheDocument();
+    expect(
+      screen.getByText("携帯電話または固定電話の番号を入力してください")
+    ).toBeInTheDocument();
   });
 
   it("should have correct placeholders", () => {

@@ -1,6 +1,6 @@
-import { render, screen, fireEvent } from "@testing-library/react";
 import { PersonalInfo } from "@/components/step-form/personal-info";
-import { FormData, ValidationErrors } from "@/lib/step-form-types";
+import type { FormData, ValidationErrors } from "@/lib/step-form-types";
+import { fireEvent, render, screen } from "@testing-library/react";
 
 describe("PersonalInfo", () => {
   const mockFormData: FormData = {
@@ -59,8 +59,12 @@ describe("PersonalInfo", () => {
       />
     );
 
-    const firstNameInput = screen.getByTestId("firstName-input") as HTMLInputElement;
-    const lastNameInput = screen.getByTestId("lastName-input") as HTMLInputElement;
+    const firstNameInput = screen.getByTestId(
+      "firstName-input"
+    ) as HTMLInputElement;
+    const lastNameInput = screen.getByTestId(
+      "lastName-input"
+    ) as HTMLInputElement;
 
     expect(firstNameInput.value).toBe("山田");
     expect(lastNameInput.value).toBe("太郎");
@@ -110,8 +114,12 @@ describe("PersonalInfo", () => {
       />
     );
 
-    expect(screen.getByTestId("firstName-error")).toHaveTextContent("姓を入力してください");
-    expect(screen.getByTestId("lastName-error")).toHaveTextContent("名を入力してください");
+    expect(screen.getByTestId("firstName-error")).toHaveTextContent(
+      "姓を入力してください"
+    );
+    expect(screen.getByTestId("lastName-error")).toHaveTextContent(
+      "名を入力してください"
+    );
   });
 
   it("should apply error styling to input with error", () => {

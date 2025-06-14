@@ -1,11 +1,11 @@
 import {
-  FormData,
-  validatePersonalInfo,
-  validateContactInfo,
-  validateFormData,
+  type FormData,
+  contactInfoSchema,
   formDataSchema,
   personalInfoSchema,
-  contactInfoSchema,
+  validateContactInfo,
+  validateFormData,
+  validatePersonalInfo,
   validatePhone,
 } from "@/lib/step-form-types";
 
@@ -35,13 +35,13 @@ describe("Zod Schema Validation", () => {
 
       const result = formDataSchema.safeParse(invalidData);
       expect(result.success).toBe(false);
-      
+
       if (!result.success) {
         const errors = result.error.errors;
-        expect(errors.some(err => err.path[0] === "firstName")).toBe(true);
-        expect(errors.some(err => err.path[0] === "address")).toBe(true);
-        expect(errors.some(err => err.path[0] === "phone")).toBe(true);
-        expect(errors.some(err => err.path[0] === "agreement")).toBe(true);
+        expect(errors.some((err) => err.path[0] === "firstName")).toBe(true);
+        expect(errors.some((err) => err.path[0] === "address")).toBe(true);
+        expect(errors.some((err) => err.path[0] === "phone")).toBe(true);
+        expect(errors.some((err) => err.path[0] === "agreement")).toBe(true);
       }
     });
   });
@@ -173,7 +173,9 @@ describe("Validation Functions", () => {
       };
 
       const errors = validateContactInfo(formData);
-      expect(errors.phone).toBe("正しい電話番号の形式で入力してください（例: 090-1234-5678）");
+      expect(errors.phone).toBe(
+        "正しい電話番号の形式で入力してください（例: 090-1234-5678）"
+      );
     });
 
     it("should return error for missing agreement", () => {
@@ -200,7 +202,9 @@ describe("Validation Functions", () => {
 
       const errors = validateContactInfo(formData);
       expect(errors.address).toBe("住所を入力してください");
-      expect(errors.phone).toBe("正しい電話番号の形式で入力してください（例: 090-1234-5678）");
+      expect(errors.phone).toBe(
+        "正しい電話番号の形式で入力してください（例: 090-1234-5678）"
+      );
       expect(errors.agreement).toBe("利用規約への同意が必要です");
     });
   });
@@ -232,7 +236,9 @@ describe("Validation Functions", () => {
       expect(errors.firstName).toBe("姓を入力してください");
       expect(errors.lastName).toBe("名を入力してください");
       expect(errors.address).toBe("住所を入力してください");
-      expect(errors.phone).toBe("正しい電話番号の形式で入力してください（例: 090-1234-5678）");
+      expect(errors.phone).toBe(
+        "正しい電話番号の形式で入力してください（例: 090-1234-5678）"
+      );
       expect(errors.agreement).toBe("利用規約への同意が必要です");
     });
   });

@@ -18,13 +18,18 @@ export default function Home() {
       <div className="text-center space-y-8">
         <div>
           <h1 className="text-4xl font-bold mb-4">shadcn/ui Dialog Demo</h1>
-          <p className="text-muted-foreground">基本的なダイアログコンポーネントのデモページです</p>
+          <p className="text-muted-foreground">
+            基本的なダイアログコンポーネントのデモページです
+          </p>
         </div>
 
         <div className="space-y-4">
           <StepDialog
             trigger={
-              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+              >
                 📝 ステップフォームダイアログ
               </Button>
             }
@@ -79,7 +84,10 @@ export default function Home() {
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="name" className="text-right text-sm font-medium">
+                  <label
+                    htmlFor="name"
+                    className="text-right text-sm font-medium"
+                  >
                     名前
                   </label>
                   <input
@@ -89,7 +97,10 @@ export default function Home() {
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="email" className="text-right text-sm font-medium">
+                  <label
+                    htmlFor="email"
+                    className="text-right text-sm font-medium"
+                  >
                     メール
                   </label>
                   <input
