@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -168,13 +167,11 @@ export function StepDialog({ trigger }: StepDialogProps) {
           {renderStepContent()}
         </div>
 
-        <DialogFooter className="flex justify-between items-center">
+        <div className="flex justify-between items-center pt-4 border-t">
           {/* 左端：キャンセルボタン */}
-          <div>
-            <Button variant="outline" onClick={handleClose} disabled={isLoading}>
-              キャンセル
-            </Button>
-          </div>
+          <Button variant="outline" onClick={handleClose} disabled={isLoading}>
+            キャンセル
+          </Button>
           
           {/* 右端：ナビゲーションボタン */}
           <div className="flex space-x-2">
@@ -193,7 +190,7 @@ export function StepDialog({ trigger }: StepDialogProps) {
               </Button>
             )}
           </div>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );
